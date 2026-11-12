@@ -121,6 +121,7 @@ textarea{min-height:70px;resize:vertical}
       <label class="chk"><input type="checkbox" id="genDeco"> Tambahkan gelembung hiasan kaca (bola kecil mengilap)</label>
       <div class="f"><label for="genTheme"><span>Tema warna kaca</span></label><select id="genTheme"></select></div>
       <h2>Foto &amp; video</h2>
+      <button class="btn" id="bulkp" type="button">Isi banyak foto saja</button>
       <button class="btn" id="bulk" type="button">Isi banyak foto/video sekaligus</button>
       <p class="muted">Mengisi slot yang masih kosong dari kiri ke kanan, sesuai urutan nama file. Foto dan video tersimpan di browser ini.</p>
       <button class="btn warn" id="reset" type="button">Mulai ulang dari contoh</button>
@@ -150,6 +151,7 @@ textarea{min-height:70px;resize:vertical}
 </div></div>
 <input type="file" id="f1" class="picker" accept="image/*,video/*">
 <input type="file" id="fm" class="picker" accept="image/*,video/*" multiple>
+<input type="file" id="fp" class="picker" accept="image/*" multiple>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
@@ -455,6 +457,8 @@ function fillEmpty(list){const files=[...list].sort((a,b)=>a.name.localeCompare(
   const empty=P.els.filter(e=>(e.t==='frame'||e.t==='bg')&&!media[e.id]).sort((a,b)=>(a.x-b.x)||((a.t==='bg'?0:1)-(b.t==='bg'?0:1)));
   files.forEach((f,i)=>{if(empty[i])setMedia(empty[i].id,f)});draw();panel();
   if(files.length>empty.length)toast(`${files.length-empty.length} file tidak terpakai karena slot kosong habis. Tambah slide atau bingkai dulu.`)}
+$('bulkp').onclick=()=>{$('fp').value='';$('fp').click()};
+$('fp').onchange=()=>{const n=$('fp').files.length;if(n)toast(n+' foto masuk',3000);fillEmpty($('fp').files)};
 $('fm').onchange=()=>{const n=$('fm').files.length;if(n)toast(n+' file masuk',3000);fillEmpty($('fm').files)};
 // drag files from a folder straight onto the editor
 const isMediaFile=f=>/^(image|video)\//.test(f.type)||/\.(jpe?g|png|webp|gif|heic|heif|mov|mp4|m4v|webm)$/i.test(f.name);
