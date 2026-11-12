@@ -12,6 +12,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+.picker{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0}
 html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:14px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
@@ -147,8 +148,8 @@ textarea{min-height:70px;resize:vertical}
   <div class="row"><button class="btn pri" id="dlall" type="button" hidden>Download semua</button></div>
   <div class="res" id="res"></div>
 </div></div>
-<input type="file" id="f1" accept="image/*,video/*,.heic,.heif,.mov" hidden>
-<input type="file" id="fm" accept="image/*,video/*,.heic,.heif,.mov" multiple hidden>
+<input type="file" id="f1" class="picker" accept="image/*,video/*">
+<input type="file" id="fm" class="picker" accept="image/*,video/*" multiple>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
@@ -454,7 +455,7 @@ function fillEmpty(list){const files=[...list].sort((a,b)=>a.name.localeCompare(
   const empty=P.els.filter(e=>(e.t==='frame'||e.t==='bg')&&!media[e.id]).sort((a,b)=>(a.x-b.x)||((a.t==='bg'?0:1)-(b.t==='bg'?0:1)));
   files.forEach((f,i)=>{if(empty[i])setMedia(empty[i].id,f)});draw();panel();
   if(files.length>empty.length)toast(`${files.length-empty.length} file tidak terpakai karena slot kosong habis. Tambah slide atau bingkai dulu.`)}
-$('fm').onchange=()=>fillEmpty($('fm').files);
+$('fm').onchange=()=>{const n=$('fm').files.length;if(n)toast(n+' file masuk',3000);fillEmpty($('fm').files)};
 // drag files from a folder straight onto the editor
 const isMediaFile=f=>/^(image|video)\//.test(f.type)||/\.(jpe?g|png|webp|gif|heic|heif|mov|mp4|m4v|webm)$/i.test(f.name);
 wrap.addEventListener('dragover',ev=>{ev.preventDefault();wrap.style.outline='2px dashed var(--accent)'});
